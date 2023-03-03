@@ -1,5 +1,4 @@
 import pygame
-
 BLACK = (0, 0, 0)
 
 class Dinosaur(pygame.sprite.Sprite):
