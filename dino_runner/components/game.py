@@ -1,21 +1,22 @@
 import pygame
-from dino_runner.utils.constants import (
-BG, 
+
+from dino_runner.utils.constants import (BG, 
 ICON, 
 SCREEN_HEIGHT, 
 SCREEN_WIDTH, 
 TITLE, 
 FPS,
-FONT_ARIAL)
-
+FONT_ARIAL,
+)
 from dino_runner.components.dinosaur import Dinosaur 
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.player_hearts.heart_manager import HeartManager
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
-
+from dino_runner.components.gameover import GameOver_manager
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()
         pygame.display.set_caption(TITLE)
         pygame.display.set_icon(ICON)
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -29,6 +30,7 @@ class Game:
         self.obstacle_manager = ObstacleManager() #obstacleManager
         self.heart_manager = HeartManager()
         self.power_up_manager = PowerUpManager()
+        self.game_over = GameOver_manager()
         self.points = 0
 
     def increase_score(self):
@@ -36,14 +38,18 @@ class Game:
         if self.points % 100 == 0:
             self.game_speed += 1
         self.player.check_invincibility()
+        self.player.check_hammer()
+        self.player.check_plus_heart()
 
     def run(self):
         # Game loop: events - update - draw
         self.playing = True
+        self.play_music()
         while self.playing:
             self.events()
             self.update()
             self.draw()
+            
         pygame.quit()
     def events(self):
         for event in pygame.event.get():
@@ -85,3 +91,7 @@ class Game:
         rect.x = 1000
         rect.y = 10
         self.screen.blit(surface, rect)
+    
+    def play_music(self):
+        pygame.mixer.music.load("dino_runner/assets/Other/musica_fondo.wav")
+        pygame.mixer_music.play()

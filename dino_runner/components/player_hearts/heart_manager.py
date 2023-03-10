@@ -8,6 +8,9 @@ class HeartManager:
     def reduce_heart(self):
         self.heart_count -= 1
 
+    def plus_heart(self):
+           self.heart_count += 1
+
     def draw(self, screen):
         x_position = 10
         y_position = 20

@@ -25,10 +25,13 @@ class ObstacleManager:
             obstacle.update(game_speed, self.obstacles)
 
             if game.player.dino_rect.colliderect(obstacle.rect):
-                if not game.player.shield:
+                if not game.player.hammer:
+                    game.heart_manager.reduce_heart()
+                elif not game.player.shield:
                     game.heart_manager.reduce_heart()
                 if game.heart_manager.heart_count < 1:
-                    pygame.time.delay(300)
+                    game.game_over.gameisover()
+                    pygame.time.delay(1500)
                     game.playing = False
                     break
                 else:

@@ -6,9 +6,13 @@ DUCKING,
 JUMPING,
 DEFAULT_TYPE,
 SHIELD_TYPE,
+HAMMER_TYPE,
 RUNNING_SHIELD,
 DUCKING_SHIELD,
-JUMPING_SHIELD
+JUMPING_SHIELD,
+JUMPING_HAMMER,
+DUCKING_HAMMER,
+RUNNING_HAMMER
 )
 
 
@@ -19,9 +23,9 @@ class Dinosaur(Sprite):
     JUMP_VEL = 8.5
 
     def __init__(self):
-        self.run_img = {DEFAULT_TYPE: RUNNING, SHIELD_TYPE: RUNNING_SHIELD}
-        self.duck_img = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD}
-        self.jump_img = {DEFAULT_TYPE: JUMPING, SHIELD_TYPE: JUMPING_SHIELD}
+        self.run_img = {DEFAULT_TYPE: RUNNING, SHIELD_TYPE: RUNNING_SHIELD, HAMMER_TYPE: RUNNING_HAMMER }
+        self.duck_img = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD, HAMMER_TYPE: DUCKING_HAMMER}
+        self.jump_img = {DEFAULT_TYPE: JUMPING, SHIELD_TYPE: JUMPING_SHIELD, HAMMER_TYPE: JUMPING_HAMMER}
         self.type = DEFAULT_TYPE
         self.image = self.run_img[self.type][0]
         self.dino_rect = self.image.get_rect()
@@ -38,6 +42,10 @@ class Dinosaur(Sprite):
         self.has_power_up = False
         self.shield = False
         self.shield_time_up = 0
+        self.hammer = False
+        self.hammer_time_up = 0
+        self.plus_heart = False
+        self.plus_heart_time_up = 0
 
     def update(self, user_input):
         if self.dino_jump:
@@ -102,6 +110,20 @@ class Dinosaur(Sprite):
             if not time_to_show >= 0:
                 self.shield = False
                 self.update_to_default(SHIELD_TYPE)
+    def check_hammer(self):
+        if self.hammer:
+            time_to_show = round((self.hammer_time_up - pygame.time.get_ticks()) / 1000, 2)
+
+            if not time_to_show >= 0:
+                self.hammer = False
+                self.update_to_default(HAMMER_TYPE)
+
+    def check_plus_heart(self):
+        if self.plus_heart:
+            time_to_show = round((self.plus_heart_time_up - pygame.time.get_ticks()) / 1000, 2)
+            if not time_to_show >= 0:
+                self.plus_heart = False
+                self.update_to_default(DEFAULT_TYPE)
 
     def update_to_default(self, current_type):
         if self.type == current_type:
